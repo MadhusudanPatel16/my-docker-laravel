@@ -1,0 +1,30 @@
+FROM php:8.2-apache
+
+# Install PHP extensions Laravel needs
+RUN apt-get update && apt-get install -y \
+    git curl libpng-dev libonig-dev libxml2-dev zip unzip \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Enable Apache mod_rewrite (important for Laravel routes)
+RUN a2enmod rewrite
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy project files
+COPY . .
+
+# Install Composer
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+RUN composer install --no-dev --optimize-autoloader
+
+# Configure Apache Document Root to Laravel's /public
+ENV APACHE_DOCUMENT_ROOT /var/www/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+# ✅ Keep Apache running in foreground
+CMD ["apache2-foreground"]
