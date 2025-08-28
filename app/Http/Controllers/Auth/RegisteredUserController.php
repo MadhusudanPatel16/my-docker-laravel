@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Events\UserRegistered;
 
 class RegisteredUserController extends Controller
 {
@@ -41,6 +42,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        event(new UserRegistered($user));
         event(new Registered($user));
 
         Auth::login($user);
