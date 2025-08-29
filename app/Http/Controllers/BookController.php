@@ -21,8 +21,14 @@ class BookController extends Controller
      */
     public function manageBookData(Request $request)
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Only admins can manage books.');
+        $bookId = $request->id ?? null;
+
+        if ($bookId) {
+            // Find the book to update
+            $book = Book::findOrFail($bookId);
+            $this->authorize('update', $book); // policy check
+        } else {
+            $this->authorize('create', Book::class); // policy check
         }
 
         $validated = $request->validate([
@@ -30,13 +36,10 @@ class BookController extends Controller
             'author' => 'required|string|max:255',
         ]);
 
-        if ($request->id) {
-            // Update existing book
-            $book = Book::findOrFail($request->id);
+        if ($bookId) {
             $book->update($validated);
             $message = 'Book updated successfully!';
         } else {
-            // Create new book
             Book::create($validated);
             $message = 'Book added successfully!';
         }
@@ -49,11 +52,9 @@ class BookController extends Controller
      */
     public function deleteBook($id)
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Only admins can delete books.');
-        }
-
         $book = Book::findOrFail($id);
+        $this->authorize('delete', $book); // policy check
+
         $book->delete();
 
         return redirect()->route('books.list')->with('success', 'Book deleted successfully!');
