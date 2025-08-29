@@ -37,6 +37,7 @@ class UserObserver
     public function updating(User $user)
     {
         Log::info('Updating user: ' . $user->id);
+        Log::info('Updating user: ' . $user->name);
     }
 
     /**
@@ -45,6 +46,7 @@ class UserObserver
     public function updated(User $user)
     {
         Log::info('User updated: ' . $user->id);
+        Log::info('User updated: ' . $user->name);
     }
 
     /**
@@ -53,6 +55,7 @@ class UserObserver
     public function deleting(User $user)
     {
         Log::info('Deleting user: ' . $user->id);
+        Log::info('Deleting user: ' . $user->name);
     }
 
     /**
@@ -61,5 +64,6 @@ class UserObserver
     public function deleted(User $user)
     {
         Log::info('User deleted: ' . $user->id);
+        Log::info('User deleted: ' . $user->name);
     }
 }
