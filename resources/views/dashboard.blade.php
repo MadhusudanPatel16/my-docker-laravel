@@ -11,6 +11,11 @@
 
                     <a href="{{ url('/') }}" class="btn btn-primary px-4">Go to Homepage</a>
                     <a href="{{ route('books.list') }}" class="btn btn-outline-primary px-4 ms-2">Books</a>
+
+                    {{-- ✅ Show "Users" button only if logged in user is admin --}}
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <a href="{{ route('users.index') }}" class="btn btn-outline-success px-4 ms-2">Users</a>
+                    @endif
                 </div>
             </div>
         </div>
