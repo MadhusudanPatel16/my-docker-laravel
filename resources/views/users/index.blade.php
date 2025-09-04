@@ -74,7 +74,7 @@
                                         onclick="editUser({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', '{{ $user->role }}', '{{ $user->status }}')">
                                         Update
                                     </button>
-                                    <form method="POST" action="{{ route('users.delete', $user->id) }}" onsubmit="return confirm('Are you sure?')" class="d-inline">
+                                    <form method="POST" action="{{ route('users.delete', $user->id) }}" onsubmit="return confirm('Are you sure want to delete user  ?')" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>

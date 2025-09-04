@@ -11,8 +11,7 @@ class UserController extends Controller
     public function index()
     {
         // Only active users, exclude admins
-        $users = User::active()
-            ->where('role', '!=', 'admin')
+        $users = User::where('role', '!=', 'admin')
             ->paginate(5);
 
         return view('users.index', compact('users'));
